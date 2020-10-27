@@ -32,6 +32,7 @@ def captureVideo():
 
     # everfocus
     cap = cv2.VideoCapture("rtsp://admin:admin@"+ IP +":554/ch01/0") 
+    
 
     if (cap.isOpened()== False):
         print("Error opening video stream or file")        
@@ -48,6 +49,7 @@ def captureVideo():
         ret, frame = cap.read()
         # get imagesize
         h, w, c = frame.shape
+        print (cap.get(cv2.CAP_PROP_FPS))
         
     # record video setup  
     encode = cv2.VideoWriter_fourcc(*'MJPG')    
