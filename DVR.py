@@ -15,15 +15,15 @@ PATH = ' '.join(sys.argv[2:])
 
 # motion threshold (percent)
 motion_threshold = 0.0001
-record_time = 1200 # (secs)
+record_time = 600 # (secs)
 
 # display debug frames
-DEBUG = True
+DEBUG = False
 
 # max number of videos
-max_nof_videos = 800
+max_nof_videos = 100
 
-FPS = 15
+FPS = 25
 
 def drawFrame (frame,text):
     cv2.putText(frame, text, (30, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
@@ -52,7 +52,8 @@ def captureVideo():
         print (cap.get(cv2.CAP_PROP_FPS))
         
     # record video setup  
-    encode = cv2.VideoWriter_fourcc(*'MJPG')    
+    #encode = cv2.VideoWriter_fourcc(*'DIVX')
+    encode = cv2.VideoWriter_fourcc('D', 'I', 'V', 'X')
     out = None
     
     time_start = 0
@@ -146,5 +147,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
