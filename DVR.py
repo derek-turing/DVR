@@ -13,9 +13,11 @@ IP = ' '.join(sys.argv[1:2])
 # path = second para
 PATH = ' '.join(sys.argv[2:])
 
-# motion threshold (percent)
-motion_threshold = 0.0001
-record_time = 600 # (secs)
+record_time = 1200 # (secs)
+
+# 23:30 ~ 02:30
+cap_start_time = 23.5 #(clock)
+cap_end_time = 2.5 + 24 #(clock)
 
 # display debug frames
 DEBUG = False
@@ -27,6 +29,9 @@ FPS = 25
 
 def drawFrame (frame,text):
     cv2.putText(frame, text, (30, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
+
+def to_integer(dt_time):
+    return 10000*dt_time.year + 100*dt_time.month + dt_time.day
 
 def captureVideo():
 
@@ -51,8 +56,7 @@ def captureVideo():
         h, w, c = frame.shape
         print (cap.get(cv2.CAP_PROP_FPS))
         
-    # record video setup  
-    #encode = cv2.VideoWriter_fourcc(*'DIVX')
+    # record video setup      
     encode = cv2.VideoWriter_fourcc('D', 'I', 'V', 'X')
     out = None
     
@@ -80,6 +84,20 @@ def captureVideo():
 
     while(cap.isOpened()):
         
+        # get time
+        time_now = time.time() 
+        hours = datetime.now().hour
+        mins = datetime.now().minute
+        
+        now_clock = hours + mins/60
+        
+        if now_clock <= 12:
+            now_clock = now_clock + 24
+
+        if ( (now_clock < cap_start_time) or (now_clock >= cap_end_time)):
+            print ("now is break time !!!")            
+            break
+
         # Capture frame-by-frame
         ret, frame = cap.read()
         
@@ -140,9 +158,28 @@ def captureVideo():
 
 # real main start
 def main():  
-  
-    print ("start open camera ...")
-    captureVideo()
+    
+    while True:
+
+        time_now = time.time() 
+        hours = datetime.now().hour
+        mins = datetime.now().minute
+        
+        now_clock = hours + mins/60
+
+        if now_clock <= 12:
+            now_clock = now_clock + 24
+
+        if (now_clock>=cap_start_time) and (now_clock<cap_end_time):
+
+            print ("start open camera ...")
+              
+            if (captureVideo() == False):
+                break
+        else :
+
+            print ("now is not work time:" + str(now_clock) )
+            time.sleep(60)
              
 
 if __name__ == "__main__":
